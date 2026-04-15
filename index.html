@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Control Escolar </title>
+<title>Control Escolar</title>
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
@@ -28,7 +28,6 @@ body {
   display: flex;
 }
 
-/* SIDEBAR */
 .sidebar {
   width: 220px;
   height: 100vh;
@@ -53,7 +52,6 @@ body {
   cursor: pointer;
 }
 
-/* MAIN */
 .main {
   flex: 1;
   padding: 30px;
@@ -135,46 +133,41 @@ button.action {
 </div>
 
 <script>
-const API = "http://localhost:3000";
-
 function toggleDark(){
   document.body.classList.toggle("dark");
 }
 
+// LOGIN DEMO
 function login() {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
-  fetch(API + "/login", {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({ email, password })
-  })
-  .then(res => res.text())
-  .then(data => {
-    alert(data);
-    if (data === "Login correcto") {
-      document.getElementById("panel").style.display = "block";
-      obtenerAlumnos();
-    }
-  });
+  if (email === "test@test.com" && password === "1234") {
+    alert("Login correcto ");
+    document.getElementById("panel").style.display = "block";
+    obtenerAlumnos();
+  } else {
+    alert("Datos incorrectos");
+  }
 }
 
-function obtenerAlumnos() {
-  fetch(API + "/alumnos")
-  .then(res => res.json())
-  .then(data => {
-    const lista = document.getElementById("lista");
-    lista.innerHTML = "";
+// DATOS DEMO
+let alumnos = [
+  {id:1, nombre:"Juan Perez", grupo:"4A"},
+  {id:2, nombre:"Maria Lopez", grupo:"3B"}
+];
 
-    data.forEach(a => {
-      lista.innerHTML += `
-        <div class="lista-item">
-          <span>${a.nombre} - ${a.grupo}</span>
-          <button onclick="eliminar(${a.id})">X</button>
-        </div>
-      `;
-    });
+function obtenerAlumnos() {
+  const lista = document.getElementById("lista");
+  lista.innerHTML = "";
+
+  alumnos.forEach(a => {
+    lista.innerHTML += `
+      <div class="lista-item">
+        <span>${a.nombre} - ${a.grupo}</span>
+        <button onclick="eliminar(${a.id})">X</button>
+      </div>
+    `;
   });
 }
 
@@ -182,31 +175,28 @@ function crearAlumno() {
   const nombre = document.getElementById("nombre").value;
   const grupo = document.getElementById("grupo").value;
 
-  fetch(API + "/alumnos", {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({ nombre, grupo })
-  })
-  .then(res => res.text())
-  .then(data => {
-    alert(data);
+  if(nombre && grupo){
+    alumnos.push({
+      id: alumnos.length + 1,
+      nombre,
+      grupo
+    });
+
+    alert("Alumno agregado ");
     obtenerAlumnos();
-  });
+  } else {
+    alert("Completa los datos");
+  }
 }
 
 function eliminar(id) {
-  fetch(API + "/alumnos/" + id, {
-    method: "DELETE"
-  })
-  .then(() => obtenerAlumnos());
+  alumnos = alumnos.filter(a => a.id !== id);
+  obtenerAlumnos();
 }
 
 function logout() {
-  fetch(API + "/logout")
-  .then(() => {
-    alert("Sesión cerrada");
-    document.getElementById("panel").style.display = "none";
-  });
+  alert("Sesión cerrada");
+  document.getElementById("panel").style.display = "none";
 }
 </script>
 
