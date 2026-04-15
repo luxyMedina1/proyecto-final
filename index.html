@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Control Escolar </title>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+<style>
+:root {
+  --primary: #4a90e2;
+  --bg: #f4f7fb;
+  --text: #2c3e50;
+  --card: #ffffff;
+}
+
+body.dark {
+  --bg: #1e1e2f;
+  --text: #f1f1f1;
+  --card: #2c2c3e;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 220px;
+  height: 100vh;
+  background: var(--primary);
+  color: white;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.sidebar h2 {
+  text-align: center;
+}
+
+.sidebar button {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  border: none;
+  background: rgba(255,255,255,0.2);
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* MAIN */
+.main {
+  flex: 1;
+  padding: 30px;
+}
+
+.card {
+  background: var(--card);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+  animation: fadeIn 0.5s ease;
+}
+
+input {
+  width: 95%;
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+button.action {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.lista-item {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.lista-item button {
+  background: red;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+@keyframes fadeIn {
+  from {opacity:0; transform: translateY(10px);} 
+  to {opacity:1; transform: translateY(0);} 
+}
+</style>
+</head>
+
+<body>
+
+<div class="sidebar">
+  <h2><i class="fa fa-school"></i> Escuela</h2>
+  <button onclick="toggleDark()"><i class="fa fa-moon"></i> Modo oscuro</button>
+  <button onclick="logout()"><i class="fa fa-sign-out"></i> Salir</button>
+</div>
+
+<div class="main">
+
+<div class="card">
+  <h2><i class="fa fa-user"></i> Login</h2>
+  <input id="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Contraseña">
+  <button class="action" onclick="login()">Entrar</button>
+</div>
+
+<div class="card" id="panel" style="display:none;">
+  <h2><i class="fa fa-users"></i> Alumnos</h2>
+  <input id="nombre" placeholder="Nombre">
+  <input id="grupo" placeholder="Grupo">
+  <button class="action" onclick="crearAlumno()">Agregar</button>
+
+  <div id="lista"></div>
+</div>
+
+</div>
+
+<script>
+const API = "http://localhost:3000";
+
+function toggleDark(){
+  document.body.classList.toggle("dark");
+}
+
+function login() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  fetch(API + "/login", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({ email, password })
+  })
+  .then(res => res.text())
+  .then(data => {
+    alert(data);
+    if (data === "Login correcto") {
+      document.getElementById("panel").style.display = "block";
+      obtenerAlumnos();
+    }
+  });
+}
+
+function obtenerAlumnos() {
+  fetch(API + "/alumnos")
+  .then(res => res.json())
+  .then(data => {
+    const lista = document.getElementById("lista");
+    lista.innerHTML = "";
+
+    data.forEach(a => {
+      lista.innerHTML += `
+        <div class="lista-item">
+          <span>${a.nombre} - ${a.grupo}</span>
+          <button onclick="eliminar(${a.id})">X</button>
+        </div>
+      `;
+    });
+  });
+}
+
+function crearAlumno() {
+  const nombre = document.getElementById("nombre").value;
+  const grupo = document.getElementById("grupo").value;
+
+  fetch(API + "/alumnos", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({ nombre, grupo })
+  })
+  .then(res => res.text())
+  .then(data => {
+    alert(data);
+    obtenerAlumnos();
+  });
+}
+
+function eliminar(id) {
+  fetch(API + "/alumnos/" + id, {
+    method: "DELETE"
+  })
+  .then(() => obtenerAlumnos());
+}
+
+function logout() {
+  fetch(API + "/logout")
+  .then(() => {
+    alert("Sesión cerrada");
+    document.getElementById("panel").style.display = "none";
+  });
+}
+</script>
+
+</body>
+</html>
