@@ -59,38 +59,17 @@ app.post('/usuarios', async (req, res) => {
 
 
 // LOGIN
-app.post('/login', (req, res) => {
-  const { email, password } = req.body;
+function login() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
 
-  if (!email || !password) {
-    return res.status(400).send('Faltan datos');
+  if (email === "test@test.com" && password === "1234") {
+    alert("Login correcto 💗");
+    document.getElementById("panel").style.display = "block";
+  } else {
+    alert("Datos incorrectos");
   }
-
-  db.query('SELECT * FROM usuarios WHERE email = ?', [email], async (err, results) => {
-
-    if (err) return res.status(500).send(err);
-
-    if (results.length === 0) {
-      return res.status(401).send('Usuario no encontrado');
-    }
-
-    const usuario = results[0];
-
-    const match = await bcrypt.compare(password, usuario.password);
-
-    if (match) {
-      req.session.usuario = {
-        id: usuario.id,
-        nombre: usuario.nombre
-      };
-
-      res.send('Login correcto');
-    } else {
-      res.status(401).send('Contraseña incorrecta');
-    }
-  });
-});
-
+}
 
 // PERFIL
 app.get('/perfil', (req, res) => {
