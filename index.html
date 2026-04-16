@@ -1,204 +1,1098 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-<meta charset="UTF-8">
-<title>Control Escolar</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Control Escolar</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet">
 
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <style>
+    /* ── VARIABLES ──────────────────────────────── */
+    :root {
+      --bg: #f0f4ff;
+      --surface: #ffffff;
+      --surface2: #e8eeff;
+      --primary: #3b5bdb;
+      --primary2: #4c6ef5;
+      --accent: #f03e3e;
+      --text: #1a1d2e;
+      --text2: #5c6080;
+      --border: #dde3f5;
+      --shadow: 0 4px 24px rgba(59, 91, 219, 0.10);
+      --radius: 14px;
+      --sidebar-w: 240px;
+    }
 
-<style>
-:root {
-  --primary: #4a90e2;
-  --bg: #f4f7fb;
-  --text: #2c3e50;
-  --card: #ffffff;
-}
+    body.dark {
+      --bg: #0f1117;
+      --surface: #1a1d2e;
+      --surface2: #252840;
+      --primary: #4c6ef5;
+      --primary2: #748ffc;
+      --text: #e8eaff;
+      --text2: #8890bb;
+      --border: #2e3254;
+      --shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+    }
 
-body.dark {
-  --bg: #1e1e2f;
-  --text: #f1f1f1;
-  --card: #2c2c3e;
-}
+    /* ── RESET ──────────────────────────────────── */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-body {
-  margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  display: flex;
-}
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      min-height: 100vh;
+      transition: background .3s, color .3s;
+    }
 
-.sidebar {
-  width: 220px;
-  height: 100vh;
-  background: var(--primary);
-  color: white;
-  padding: 20px;
-  box-sizing: border-box;
-}
+    /* ── SIDEBAR ────────────────────────────────── */
+    .sidebar {
+      width: var(--sidebar-w);
+      min-height: 100vh;
+      background: var(--primary);
+      background: linear-gradient(160deg, #3b5bdb 0%, #1c3aa9 100%);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      padding: 28px 18px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 100;
+      transition: transform .3s;
+    }
 
-.sidebar h2 {
-  text-align: center;
-}
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 36px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, .2);
+    }
 
-.sidebar button {
-  width: 100%;
-  margin-top: 10px;
-  padding: 10px;
-  border: none;
-  background: rgba(255,255,255,0.2);
-  color: white;
-  border-radius: 8px;
-  cursor: pointer;
-}
+    .sidebar-logo i {
+      font-size: 1.6rem;
+    }
 
-.main {
-  flex: 1;
-  padding: 30px;
-}
+    .sidebar-logo span {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
 
-.card {
-  background: var(--card);
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  margin-bottom: 20px;
-  animation: fadeIn 0.5s ease;
-}
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: .93rem;
+      font-weight: 500;
+      color: rgba(255, 255, 255, .75);
+      transition: background .2s, color .2s;
+      margin-bottom: 4px;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+    }
 
-input {
-  width: 95%;
-  padding: 10px;
-  margin: 5px 0;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-}
+    .nav-item:hover,
+    .nav-item.active {
+      background: rgba(255, 255, 255, .15);
+      color: #fff;
+    }
 
-button.action {
-  background: var(--primary);
-  color: white;
-  border: none;
-  padding: 10px;
-  border-radius: 8px;
-  cursor: pointer;
-}
+    .nav-item i {
+      width: 18px;
+      text-align: center;
+    }
 
-.lista-item {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
-}
+    .sidebar-bottom {
+      margin-top: auto;
+    }
 
-.lista-item button {
-  background: red;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 5px;
-}
+    .user-chip {
+      background: rgba(255, 255, 255, .1);
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 10px;
+      font-size: .85rem;
+    }
 
-@keyframes fadeIn {
-  from {opacity:0; transform: translateY(10px);} 
-  to {opacity:1; transform: translateY(0);} 
-}
-</style>
+    .user-chip .name {
+      font-weight: 600;
+    }
+
+    .user-chip .email {
+      color: rgba(255, 255, 255, .6);
+      font-size: .78rem;
+    }
+
+    /* ── MAIN ───────────────────────────────────── */
+    .main {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      padding: 36px 32px;
+      min-height: 100vh;
+    }
+
+    .page {
+      display: none;
+      animation: fadeUp .4s ease;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ── PAGE HEADER ────────────────────────────── */
+    .page-header {
+      margin-bottom: 28px;
+    }
+
+    .page-header h1 {
+      font-size: 1.7rem;
+      font-weight: 700;
+      letter-spacing: -.5px;
+    }
+
+    .page-header p {
+      color: var(--text2);
+      font-size: .92rem;
+      margin-top: 4px;
+    }
+
+    /* ── CARD ───────────────────────────────────── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+
+    /* ── FORM ELEMENTS ──────────────────────────── */
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: .85rem;
+      font-weight: 600;
+      color: var(--text2);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 9px;
+      background: var(--surface2);
+      color: var(--text);
+      font-family: 'Outfit', sans-serif;
+      font-size: .95rem;
+      transition: border-color .2s, box-shadow .2s;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: var(--primary2);
+      box-shadow: 0 0 0 3px rgba(76, 110, 245, .15);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    /* ── BUTTONS ────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 9px;
+      font-family: 'Outfit', sans-serif;
+      font-size: .92rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity .2s, transform .15s, box-shadow .2s;
+    }
+
+    .btn:hover {
+      opacity: .88;
+      transform: translateY(-1px);
+    }
+
+    .btn:active {
+      transform: scale(.97);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(59, 91, 219, .3);
+    }
+
+    .btn-danger {
+      background: #fa5252;
+      color: #fff;
+    }
+
+    .btn-warning {
+      background: #f59f00;
+      color: #fff;
+    }
+
+    .btn-ghost {
+      background: var(--surface2);
+      color: var(--text);
+      border: 1.5px solid var(--border);
+    }
+
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: .82rem;
+      border-radius: 7px;
+    }
+
+    /* ── TABLE ──────────────────────────────────── */
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .92rem;
+    }
+
+    thead th {
+      text-align: left;
+      padding: 10px 14px;
+      font-size: .78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      color: var(--text2);
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+    }
+
+    thead th:first-child {
+      border-radius: 8px 0 0 8px;
+    }
+
+    thead th:last-child {
+      border-radius: 0 8px 8px 0;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background .15s;
+    }
+
+    tbody tr:last-child {
+      border-bottom: none;
+    }
+
+    tbody tr:hover {
+      background: var(--surface2);
+    }
+
+    tbody td {
+      padding: 13px 14px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: .78rem;
+      font-weight: 600;
+      background: rgba(76, 110, 245, .12);
+      color: var(--primary2);
+    }
+
+    .actions-cell {
+      display: flex;
+      gap: 8px;
+    }
+
+    /* ── ALERT / TOAST ──────────────────────────── */
+    #toast {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      padding: 13px 20px;
+      border-radius: 11px;
+      background: #2f9e44;
+      color: #fff;
+      font-weight: 600;
+      font-size: .9rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .2);
+      z-index: 9999;
+      transform: translateY(80px);
+      opacity: 0;
+      transition: all .35s cubic-bezier(.34, 1.56, .64, 1);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    #toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    #toast.error {
+      background: #fa5252;
+    }
+
+    /* ── MODAL ──────────────────────────────────── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .45);
+      z-index: 500;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(3px);
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--surface);
+      border-radius: 16px;
+      padding: 30px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, .25);
+      animation: fadeUp .3s ease;
+    }
+
+    .modal h3 {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+    }
+
+    .modal-footer {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 20px;
+    }
+
+    /* ── LOGIN PAGE ─────────────────────────────── */
+    .login-wrap {
+      max-width: 420px;
+      margin: 40px auto 0;
+    }
+
+    .login-wrap .card {
+      padding: 36px;
+    }
+
+    .login-logo {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .login-logo i {
+      font-size: 2.5rem;
+      color: var(--primary);
+    }
+
+    .login-logo h2 {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.3rem;
+      margin-top: 8px;
+    }
+
+    .login-logo p {
+      color: var(--text2);
+      font-size: .88rem;
+      margin-top: 4px;
+    }
+
+    /* ── STAT CARDS ─────────────────────────────── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .stat-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 11px;
+      background: rgba(76, 110, 245, .12);
+      color: var(--primary2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    .stat-icon.green {
+      background: rgba(47, 158, 68, .12);
+      color: #2f9e44;
+    }
+
+    .stat-info .val {
+      font-size: 1.6rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .stat-info .lbl {
+      color: var(--text2);
+      font-size: .8rem;
+      margin-top: 3px;
+    }
+
+    /* ── TABS ───────────────────────────────────── */
+    .tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 0;
+    }
+
+    .tab-btn {
+      padding: 9px 18px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-family: 'Outfit', sans-serif;
+      font-size: .9rem;
+      font-weight: 600;
+      color: var(--text2);
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: color .2s, border-color .2s;
+    }
+
+    .tab-btn.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* ── EMPTY STATE ────────────────────────────── */
+    .empty {
+      text-align: center;
+      padding: 40px;
+      color: var(--text2);
+    }
+
+    .empty i {
+      font-size: 2.5rem;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    /* ── RESPONSIVE ─────────────────────────────── */
+    @media (max-width: 700px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .main {
+        margin-left: 0;
+        padding: 20px 16px;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<div class="sidebar">
-  <h2><i class="fa fa-school"></i> Escuela</h2>
-  <button onclick="toggleDark()"><i class="fa fa-moon"></i> Modo oscuro</button>
-  <button onclick="logout()"><i class="fa fa-sign-out"></i> Salir</button>
-</div>
+  <!-- ══ SIDEBAR ══════════════════════════════════════════ -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <i class="fa fa-graduation-cap"></i>
+      <span>Control<br>Escolar</span>
+    </div>
 
-<div class="main">
+    <div id="nav-autenticado" style="display:none">
+      <button class="nav-item active" onclick="navegar('dashboard')">
+        <i class="fa fa-chart-pie"></i> Dashboard
+      </button>
+      <button class="nav-item" onclick="navegar('alumnos')">
+        <i class="fa fa-users"></i> Alumnos
+      </button>
+      <button class="nav-item" onclick="navegar('registro')">
+        <i class="fa fa-user-plus"></i> Nuevo Usuario
+      </button>
+    </div>
 
-<div class="card">
-  <h2><i class="fa fa-user"></i> Login</h2>
-  <input id="email" placeholder="Email">
-  <input id="password" type="password" placeholder="Contraseña">
-  <button class="action" onclick="login()">Entrar</button>
-</div>
-
-<div class="card" id="panel" style="display:none;">
-  <h2><i class="fa fa-users"></i> Alumnos</h2>
-  <input id="nombre" placeholder="Nombre">
-  <input id="grupo" placeholder="Grupo">
-  <button class="action" onclick="crearAlumno()">Agregar</button>
-
-  <div id="lista"></div>
-</div>
-
-</div>
-
-<script>
-function toggleDark(){
-  document.body.classList.toggle("dark");
-}
-
-// LOGIN DEMO
-function login() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-
-  if (email === "test@test.com" && password === "1234") {
-    alert("Login correcto ");
-    document.getElementById("panel").style.display = "block";
-    obtenerAlumnos();
-  } else {
-    alert("Datos incorrectos");
-  }
-}
-
-// DATOS DEMO
-let alumnos = [
-  {id:1, nombre:"Juan Perez", grupo:"4A"},
-  {id:2, nombre:"Maria Lopez", grupo:"3B"}
-];
-
-function obtenerAlumnos() {
-  const lista = document.getElementById("lista");
-  lista.innerHTML = "";
-
-  alumnos.forEach(a => {
-    lista.innerHTML += `
-      <div class="lista-item">
-        <span>${a.nombre} - ${a.grupo}</span>
-        <button onclick="eliminar(${a.id})">X</button>
+    <div class="sidebar-bottom">
+      <div id="user-chip" class="user-chip" style="display:none">
+        <div class="name" id="chip-nombre">—</div>
+        <div class="email" id="chip-email">—</div>
       </div>
-    `;
-  });
-}
+      <button class="nav-item" onclick="toggleDark()">
+        <i class="fa fa-moon" id="dark-icon"></i> <span id="dark-label">Modo oscuro</span>
+      </button>
+      <button class="nav-item" id="btn-logout" onclick="logout()" style="display:none">
+        <i class="fa fa-right-from-bracket"></i> Cerrar sesión
+      </button>
+    </div>
+  </div>
 
-function crearAlumno() {
-  const nombre = document.getElementById("nombre").value;
-  const grupo = document.getElementById("grupo").value;
+  <!-- ══ MAIN ═════════════════════════════════════════════ -->
+  <div class="main">
 
-  if(nombre && grupo){
-    alumnos.push({
-      id: alumnos.length + 1,
-      nombre,
-      grupo
+    <!-- LOGIN -->
+    <div class="page active" id="page-login">
+      <div class="login-wrap">
+        <div class="card">
+          <div class="login-logo">
+            <i class="fa fa-graduation-cap"></i>
+            <h2>Control Escolar</h2>
+            <p>Inicia sesión para continuar</p>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="login-email" placeholder="correo@ejemplo.com">
+          </div>
+          <div class="form-group">
+            <label>Contraseña</label>
+            <input type="password" id="login-password" placeholder="••••••••"
+              onkeydown="if(event.key==='Enter') login()">
+          </div>
+          <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:8px" onclick="login()">
+            <i class="fa fa-right-to-bracket"></i> Entrar
+          </button>
+          <p style="text-align:center;margin-top:16px;font-size:.85rem;color:var(--text2)">
+            ¿No tienes cuenta?
+            <a href="#" onclick="navegar('registro')" style="color:var(--primary);font-weight:600">Regístrate</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- REGISTRO DE NUEVO USUARIO -->
+    <div class="page" id="page-registro">
+      <div class="page-header">
+        <h1><i class="fa fa-user-plus"></i> Nuevo Usuario</h1>
+        <p>Registra un nuevo usuario en el sistema</p>
+      </div>
+      <div class="card" style="max-width:480px">
+        <div class="form-group">
+          <label>Nombre completo</label>
+          <input type="text" id="reg-nombre" placeholder="Ej. Juan García">
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="reg-email" placeholder="correo@ejemplo.com">
+        </div>
+        <div class="form-group">
+          <label>Contraseña</label>
+          <input type="password" id="reg-password" placeholder="Mínimo 6 caracteres">
+        </div>
+        <div style="display:flex;gap:10px;margin-top:8px">
+          <button class="btn btn-primary" onclick="registrarUsuario()">
+            <i class="fa fa-check"></i> Registrar
+          </button>
+          <button class="btn btn-ghost" onclick="navegar('login')">Cancelar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="page" id="page-dashboard">
+      <div class="page-header">
+        <h1>Dashboard</h1>
+        <p id="bienvenida">Bienvenido al sistema de control escolar</p>
+      </div>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fa fa-users"></i></div>
+          <div class="stat-info">
+            <div class="val" id="total-alumnos">—</div>
+            <div class="lbl">Total alumnos</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon green"><i class="fa fa-graduation-cap"></i></div>
+          <div class="stat-info">
+            <div class="val" id="total-grupos">—</div>
+            <div class="lbl">Grupos</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <h3 style="margin-bottom:16px"><i class="fa fa-clock-rotate-left"></i> Últimos alumnos registrados</h3>
+        <div id="recent-list">
+          <div class="empty"><i class="fa fa-spinner fa-spin"></i> Cargando...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ALUMNOS -->
+    <div class="page" id="page-alumnos">
+      <div class="page-header">
+        <h1><i class="fa fa-users"></i> Alumnos</h1>
+        <p>Gestiona el registro de alumnos</p>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <button class="tab-btn active" onclick="abrirTab('tab-agregar', this)">
+          <i class="fa fa-plus"></i> Agregar alumno
+        </button>
+        <button class="tab-btn" onclick="abrirTab('tab-lista', this); cargarAlumnos()">
+          <i class="fa fa-list"></i> Lista de alumnos
+        </button>
+      </div>
+
+      <!-- Tab: Agregar -->
+      <div class="tab-content active" id="tab-agregar">
+        <div class="card" style="max-width:480px">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Nombre del alumno</label>
+              <input type="text" id="alumno-nombre" placeholder="Ej. Luis Hernández">
+            </div>
+            <div class="form-group">
+              <label>Grupo</label>
+              <input type="text" id="alumno-grupo" placeholder="Ej. 5A">
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="crearAlumno()">
+            <i class="fa fa-plus"></i> Agregar alumno
+          </button>
+        </div>
+      </div>
+
+      <!-- Tab: Lista -->
+      <div class="tab-content" id="tab-lista">
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+            <input type="text" id="buscar" placeholder="🔍  Buscar alumno..." style="max-width:240px"
+              oninput="filtrarTabla()">
+            <button class="btn btn-ghost btn-sm" onclick="cargarAlumnos()">
+              <i class="fa fa-rotate"></i> Actualizar
+            </button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Nombre</th>
+                  <th>Grupo</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="tabla-alumnos">
+                <tr>
+                  <td colspan="4">
+                    <div class="empty"><i class="fa fa-spinner fa-spin"></i></div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+
+  <!-- ══ MODAL EDITAR ══════════════════════════════════════ -->
+  <div class="modal-overlay" id="modal-editar">
+    <div class="modal">
+      <h3><i class="fa fa-pen"></i> Editar alumno</h3>
+      <input type="hidden" id="edit-id">
+      <div class="form-group">
+        <label>Nombre</label>
+        <input type="text" id="edit-nombre" placeholder="Nombre del alumno">
+      </div>
+      <div class="form-group">
+        <label>Grupo</label>
+        <input type="text" id="edit-grupo" placeholder="Grupo">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="cerrarModal()">Cancelar</button>
+        <button class="btn btn-primary" onclick="actualizarAlumno()">
+          <i class="fa fa-check"></i> Guardar cambios
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TOAST ═════════════════════════════════════════════ -->
+  <div id="toast"><i class="fa fa-check-circle"></i> <span id="toast-msg"></span></div>
+
+  <script>
+    const API = 'http://localhost:3000';
+    let alumnosData = [];
+
+    /* ──────────────────────────────────────────────────────── *
+     * NAVEGACIÓN
+     * ──────────────────────────────────────────────────────── */
+    function navegar(pagina) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById('page-' + pagina)?.classList.add('active');
+
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => {
+        if (n.textContent.toLowerCase().includes(
+          pagina === 'dashboard' ? 'dashboard' :
+            pagina === 'alumnos' ? 'alumnos' :
+              pagina === 'registro' ? 'nuevo' : '___')) {
+          n.classList.add('active');
+        }
+      });
+    }
+
+    function abrirTab(id, btn) {
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      btn.classList.add('active');
+    }
+
+    /* ──────────────────────────────────────────────────────── *
+     * DARK MODE
+     * ──────────────────────────────────────────────────────── */
+    function toggleDark() {
+      document.body.classList.toggle('dark');
+      const dark = document.body.classList.contains('dark');
+      document.getElementById('dark-icon').className = dark ? 'fa fa-sun' : 'fa fa-moon';
+      document.getElementById('dark-label').textContent = dark ? 'Modo claro' : 'Modo oscuro';
+    }
+
+    /* ──────────────────────────────────────────────────────── *
+     * TOAST
+     * ──────────────────────────────────────────────────────── */
+    function toast(msg, tipo = 'ok') {
+      const el = document.getElementById('toast');
+      const ic = el.querySelector('i');
+      document.getElementById('toast-msg').textContent = msg;
+      el.className = tipo === 'error' ? 'error' : '';
+      ic.className = tipo === 'error' ? 'fa fa-circle-xmark' : 'fa fa-check-circle';
+      el.classList.add('show');
+      setTimeout(() => el.classList.remove('show'), 3200);
+    }
+
+    /* ──────────────────────────────────────────────────────── *
+     * AUTH: LOGIN
+     * ──────────────────────────────────────────────────────── */
+    async function login() {
+      const email = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value;
+
+      if (!email || !password) { toast('Completa todos los campos', 'error'); return; }
+
+      try {
+        const res = await fetch(`${API}/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (!res.ok) { toast(data.error || 'Error al iniciar sesión', 'error'); return; }
+
+        // Sesión iniciada — actualizar UI
+        document.getElementById('chip-nombre').textContent = data.usuario.nombre;
+        document.getElementById('chip-email').textContent = data.usuario.email;
+        document.getElementById('bienvenida').textContent = `Bienvenido, ${data.usuario.nombre} 👋`;
+        document.getElementById('user-chip').style.display = 'block';
+        document.getElementById('btn-logout').style.display = 'flex';
+        document.getElementById('nav-autenticado').style.display = 'block';
+
+        toast(`¡Hola ${data.usuario.nombre}! Sesión iniciada`);
+        navegar('dashboard');
+        cargarDashboard();
+
+      } catch (e) {
+        toast('No se pudo conectar al servidor', 'error');
+      }
+    }
+
+    /* ──────────────────────────────────────────────────────── *
+     * AUTH: REGISTRO
+     * ──────────────────────────────────────────────────────── */
+    async function registrarUsuario() {
+      const nombre = document.getElementById('reg-nombre').value.trim();
+      const email = document.getElementById('reg-email').value.trim();
+      const password = document.getElementById('reg-password').value;
+
+      if (!nombre || !email || !password) { toast('Completa todos los campos', 'error'); return; }
+
+      try {
+        const res = await fetch(`${API}/usuarios`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ nombre, email, password })
+        });
+        const data = await res.json();
+        if (!res.ok) { toast(data.error || 'Error al registrar', 'error'); return; }
+
+        toast('Usuario registrado. Ahora inicia sesión');
+        document.getElementById('reg-nombre').value = '';
+        document.getElementById('reg-email').value = '';
+        document.getElementById('reg-password').value = '';
+        navegar('login');
+      } catch (e) {
+        toast('No se pudo conectar al servidor', 'error');
+      }
+    }
+
+    /* ──────────────────────────────────────────────────────── *
+     * AUTH: LOGOUT
+     * ──────────────────────────────────────────────────────── */
+    async function logout() {
+      try {
+        await fetch(`${API}/logout`, { credentials: 'include' });
+      } catch (_) { }
+
+      document.getElementById('user-chip').style.display = 'none';
+      document.getElementById('btn-logout').style.display = 'none';
+      document.getElementById('nav-autenticado').style.display = 'none';
+      document.getElementById('login-email').value = '';
+      document.getElementById('login-password').value = '';
+      toast('Sesión cerrada');
+      navegar('login');
+    }
+
+    /* ──────────────────────────────────────────────────────── *
+     * DASHBOARD
+     * ──────────────────────────────────────────────────────── */
+    async function cargarDashboard() {
+      try {
+        const res = await fetch(`${API}/alumnos`, { credentials: 'include' });
+        if (!res.ok) return;
+        const data = await res.json();
+
+        document.getElementById('total-alumnos').textContent = data.length;
+        const grupos = new Set(data.map(a => a.grupo));
+        document.getElementById('total-grupos').textContent = grupos.size;
+
+        const recientes = data.slice(0, 5);
+        const ul = document.getElementById('recent-list');
+        if (recientes.length === 0) {
+          ul.innerHTML = '<div class="empty"><i class="fa fa-inbox"></i> Sin alumnos registrados</div>';
+          return;
+        }
+        ul.innerHTML = recientes.map(a => `
+      <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)">
+        <span><i class="fa fa-user" style="color:var(--primary2);margin-right:8px"></i>${a.nombre}</span>
+        <span class="badge">${a.grupo}</span>
+      </div>
+    `).join('');
+      } catch (e) { /* silencioso */ }
+    }
+
+    /* ──────────────────────────────────────────────────────── *
+     * CRUD: LEER
+     * ──────────────────────────────────────────────────────── */
+    async function cargarAlumnos() {
+      const tbody = document.getElementById('tabla-alumnos');
+      tbody.innerHTML = '<tr><td colspan="4"><div class="empty"><i class="fa fa-spinner fa-spin"></i> Cargando...</div></td></tr>';
+
+      try {
+        const res = await fetch(`${API}/alumnos`, { credentials: 'include' });
+        if (res.status === 401) { toast('Sesión expirada, vuelve a iniciar sesión', 'error'); navegar('login'); return; }
+        const data = await res.json();
+        alumnosData = data;
+        renderTabla(data);
+      } catch (e) {
+        tbody.innerHTML = '<tr><td colspan="4"><div class="empty">Error al cargar datos</div></td></tr>';
+      }
+    }
+
+    function renderTabla(lista) {
+      const tbody = document.getElementById('tabla-alumnos');
+      if (lista.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4"><div class="empty"><i class="fa fa-inbox"></i> Sin alumnos</div></td></tr>';
+        return;
+      }
+      tbody.innerHTML = lista.map(a => `
+    <tr>
+      <td style="color:var(--text2);font-size:.82rem">${a.id}</td>
+      <td><strong>${a.nombre}</strong></td>
+      <td><span class="badge">${a.grupo}</span></td>
+      <td>
+        <div class="actions-cell">
+          <button class="btn btn-warning btn-sm" onclick="abrirEditar(${a.id}, '${a.nombre.replace(/'/g, "\\'")}', '${a.grupo}')">
+            <i class="fa fa-pen"></i> Editar
+          </button>
+          <button class="btn btn-danger btn-sm" onclick="eliminarAlumno(${a.id}, '${a.nombre.replace(/'/g, "\\'")}')">
+            <i class="fa fa-trash"></i>
+          </button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+    }
+
+    function filtrarTabla() {
+      const q = document.getElementById('buscar').value.toLowerCase();
+      renderTabla(alumnosData.filter(a =>
+        a.nombre.toLowerCase().includes(q) || a.grupo.toLowerCase().includes(q)
+      ));
+    }
+
+    /* ──────────────────────────────────────────────────────── *
+     * CRUD: CREAR
+     * ──────────────────────────────────────────────────────── */
+    async function crearAlumno() {
+      const nombre = document.getElementById('alumno-nombre').value.trim();
+      const grupo = document.getElementById('alumno-grupo').value.trim();
+      if (!nombre || !grupo) { toast('Completa nombre y grupo', 'error'); return; }
+
+      try {
+        const res = await fetch(`${API}/alumnos`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ nombre, grupo })
+        });
+        const data = await res.json();
+        if (!res.ok) { toast(data.error || 'Error al crear alumno', 'error'); return; }
+
+        toast(`Alumno "${nombre}" agregado correctamente`);
+        document.getElementById('alumno-nombre').value = '';
+        document.getElementById('alumno-grupo').value = '';
+      } catch (e) {
+        toast('No se pudo conectar al servidor', 'error');
+      }
+    }
+
+    /* ──────────────────────────────────────────────────────── *
+     * CRUD: ACTUALIZAR (MODAL)
+     * ──────────────────────────────────────────────────────── */
+    function abrirEditar(id, nombre, grupo) {
+      document.getElementById('edit-id').value = id;
+      document.getElementById('edit-nombre').value = nombre;
+      document.getElementById('edit-grupo').value = grupo;
+      document.getElementById('modal-editar').classList.add('open');
+    }
+    function cerrarModal() {
+      document.getElementById('modal-editar').classList.remove('open');
+    }
+
+    async function actualizarAlumno() {
+      const id = document.getElementById('edit-id').value;
+      const nombre = document.getElementById('edit-nombre').value.trim();
+      const grupo = document.getElementById('edit-grupo').value.trim();
+      if (!nombre || !grupo) { toast('Completa todos los campos', 'error'); return; }
+
+      try {
+        const res = await fetch(`${API}/alumnos/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ nombre, grupo })
+        });
+        const data = await res.json();
+        if (!res.ok) { toast(data.error || 'Error al actualizar', 'error'); return; }
+
+        toast('Alumno actualizado correctamente');
+        cerrarModal();
+        cargarAlumnos();
+      } catch (e) {
+        toast('No se pudo conectar al servidor', 'error');
+      }
+    }
+
+    /* ──────────────────────────────────────────────────────── *
+     * CRUD: ELIMINAR
+     * ──────────────────────────────────────────────────────── */
+    async function eliminarAlumno(id, nombre) {
+      if (!confirm(`¿Eliminar al alumno "${nombre}"?`)) return;
+
+      try {
+        const res = await fetch(`${API}/alumnos/${id}`, {
+          method: 'DELETE',
+          credentials: 'include'
+        });
+        const data = await res.json();
+        if (!res.ok) { toast(data.error || 'Error al eliminar', 'error'); return; }
+
+        toast(`Alumno "${nombre}" eliminado`);
+        cargarAlumnos();
+      } catch (e) {
+        toast('No se pudo conectar al servidor', 'error');
+      }
+    }
+
+    /* Cerrar modal al hacer click afuera */
+    document.getElementById('modal-editar').addEventListener('click', function (e) {
+      if (e.target === this) cerrarModal();
     });
-
-    alert("Alumno agregado ");
-    obtenerAlumnos();
-  } else {
-    alert("Completa los datos");
-  }
-}
-
-function eliminar(id) {
-  alumnos = alumnos.filter(a => a.id !== id);
-  obtenerAlumnos();
-}
-
-function logout() {
-  alert("Sesión cerrada");
-  document.getElementById("panel").style.display = "none";
-}
-</script>
-
+  </script>
 </body>
+
 </html>
